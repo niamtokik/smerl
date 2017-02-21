@@ -1,0 +1,25 @@
+(meta keywords test test1 test2)
+(meta tag test test1 test2)
+(meta description this is an article)
+(meta author John Smith)
+(meta mail john@smith.com)
+(meta version 0.0.1)
+(meta license ISC)
+(meta announce twitter)
+(meta announce facebook)
+
+(title That an article!)
+
+(chapter chapter 1 - this is a test)
+
+(section section 1 - only a test)
+
+This text is stored in first paragraph of section 1, chapter 1!
+
+Another paragraph use \n\n separator!
+
+(code erlang
+	-module(mymodule).
+	test(X) ->
+	  X.
+)

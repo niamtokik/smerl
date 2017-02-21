@@ -12,12 +12,25 @@
 
 template() ->
     [{file, ?CONFIG}
-    ,{file, index} 
-    ,{dir, template}
+    ,{file, "index"} 
+    ,{dir,  "template"}
     ,{file, "template/header"}
     ,{file, "template/footer"}
-    ,{dir, static}   
-    ,{dir, article}].
+    ,{dir,  "static"}   
+    ,{dir,  "article"}].
+
+template(Template, Parameters) ->
+    Dir = proplists:get_value(name, Parameters),
+    template(Template, Dir, Parameters).
+
+template([], Dir, Parameters) ->
+    ok;
+template([{file, Target}|Tail], Dir, Parameters)->
+    io:format("touch -p ~s~n", [Dir ++ "/" ++ Target]),
+    template(Tail, Dir, Parameters);
+template([{dir, Target}|Tail], Dir, Parameters) ->
+    io:format("mkdir -p ~s~n", [Dir ++ "/" ++ Target]),
+    template(Tail, Dir, Parameters).
 
 main() ->
     usage().
@@ -48,14 +61,20 @@ arguments(_, _) ->
 
 execute(Parameters) ->
     Name = proplists:get_value(name, Parameters),
-    io:format("initialize ~p static size...~n", [Name]).
+    io:format("initialize ~p static dir...~n", [Name]),
+    template(template(), Parameters).
 
 execute(git, Parameters) ->
     Name = proplists:get_value(name, Parameters),
-    io:format("initialize repository ~p with git~n", [Name]);
+    io:format("initialize repository ~p with git~n", [Name]),
+    io:format("git init ~s~n", [Name]),
+    execute(Parameters);
 execute(fossil, Parameters) ->
     Name = proplists:get_value(name, Parameters),
-    io:format("initialize repository ~p with fossil~n", [Name]);
+    io:format("initialize repository ~p with fossil~n", [Name]),
+    io:format("mkdir -p ~s~n", [Name]),
+    io:format("fossil new ~s~n", [Name ++ "/" ++ Name ++ ".fossil"]),
+    execute(Parameters);
 execute(svn, Parameters) ->
     Name = proplists:get_value(name, Parameters),
     io:format("initialize repository ~p with svn~n", [Name]).

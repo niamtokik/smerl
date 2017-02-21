@@ -10,6 +10,7 @@
 -compile([export_all]).
 
 % smerl announce all
+% smerl announce rss
 % smerl announce twitter
 % smerl announce linkedin
 % smerl announce alentoor
